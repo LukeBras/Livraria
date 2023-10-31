@@ -8,6 +8,7 @@ import { useDarkMode } from '@/hooks/useDarkMode'
 import { useAside } from '@/hooks/useAside';
 import { Aside } from '@/components/Aside'
 
+
 const inter = Inter({ subsets: ['latin'] })
 
 
@@ -27,14 +28,12 @@ export default function RootLayout({
 
   return (
     <html className={mode} lang="en">
-     
       <body className={inter.className}>
-        {aside &&
-          <Aside  />
-        }
-        <Header/>
-        {children}
-        <Footer/>
+          <Header/>
+          <main>
+            {children}
+          </main>
+           
       </body>
     </html>
   )

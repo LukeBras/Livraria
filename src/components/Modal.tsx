@@ -1,111 +1,55 @@
 'use client'
 
-import { Book } from "@/types/book";
-import { useState } from "react";
-import { Aside } from "./Aside";
-import { useCart } from "@/hooks/useCart";
-import { useAside } from '@/hooks/useAside';
+import { Book } from "@/types/book"
+import { useState } from "react"
+import { Aside } from "./Aside"
 
-type PropsModal = {
-    closeModal:()=>void;
-    bookModalInfo:Book|null;
+type modalProps = {
+    book:Book,
+    closeModal:()=>void
 }
 
-export const Modal = ({closeModal,bookModalInfo}:PropsModal)=>{
 
-    const {cart,setCart} = useCart();
-    const {setAside} = useAside();
+export const Modal = ({book,closeModal}:modalProps)=>{
 
-    const [CurrentNumber,setCurrentNumber] = useState(1)
-
-    const handlePlusButton = ()=>{
-        setCurrentNumber(CurrentNumber+1);
-    }
-    
-    const handleMinusButton = ()=>{
-        if(CurrentNumber>1){
-            setCurrentNumber(CurrentNumber-1);
-        }
-    }
-   
-   
+    const [showAside,setShowAside] = useState(false);
 
     const openAside = ()=>{
-        setAside(true);
-        const book = {
-            id:bookModalInfo?.id,
-            title:bookModalInfo?.title,
-            author:bookModalInfo?.author,
-            description:bookModalInfo?.description,
-            img:bookModalInfo?.img,
-            price:bookModalInfo?.price,
-        } as Book
 
-        const bookCartIndex = cart.findIndex((item)=>{
-            if(item.id===book.id){
-                return item;
-            }
-            
-        })
-        if(bookCartIndex!=-1 ){
-            let newBookCart = [...cart];
-            newBookCart[bookCartIndex].quantity+=CurrentNumber;
-            setCart(newBookCart);
-    
-            
-        }else{
-            setCart([
-                ...cart,
-                {
-                    id:book.id,
-                    title:book.title,
-                    author:book.author,
-                    description:book.description,
-                    img:book.img,
-                    price:book.price,
-                    quantity:CurrentNumber,
-                    totalPrice:book.price*CurrentNumber
-                }
-            ])
-        }
-     
-       closeModal()
-        
-        
-      
-        
-        
     }
-
 
 
 
     return(
-        <div className="fixed   top-0 bottom-0 left-0 flex justify-center items-center right-0 bg-black/80">
-            <div className="flex dark:bg-slate-500  dark:text-white rounded-lg  w-[700px] text-[#8e5436] bg-white p-5">
-                <img className="h-[300px] mr-3" src={bookModalInfo?.img} alt="" />
-                <div className="flex flex-col justify-start items-center">
-                    
-                    <div onClick={closeModal} className="text-[30px] w-full flex justify-end cursor-pointer text-[#8e5436]">
-                        X
+        <div className="fixed    top-0 bottom-0 left-0 flex justify-center items-center right-0 bg-black/80">
+            <div className="max-w-4xl w-full flex bg-zinc-500 border border-gray-500 rounded-md">
+                <img className="max-w-[400px] max-h-[400px] p-3 object-contain" src={book.img} alt="book image" />
+                <div className="flex flex-col justify-between flex-1 p-4">
+                    <div className="text-white">
+                        <h1 className="text-5xl font-bold text-center">{book.title}</h1>
+                        <h2 className="text-2xl font-semibold mt-5">{book.author}</h2>
+                        <p className="text-base font-semibold mt-5">preço R$ {book.price.toFixed(2)}</p>
                     </div>
-
-                    <h1 className="text-4xl mb-3">{bookModalInfo?.title}</h1>
-                    <h2 className="text-3xl mb-3">{bookModalInfo?.author}</h2>
-                    <span className="text-2xl">R$ {bookModalInfo?.price.toFixed(2)}</span>
-                    <p>{bookModalInfo?.description}</p>
-
-                    <div className=" w-full flex justify-between mt-5">
-                        <div className=" flex justify-around items-center w-32">
-                            <button onClick={handleMinusButton} className="bg-[#8e5436] dark:bg-slate-800  w-28 p-2 rounded-md text-white">-</button>
-                            <div className="mr-4 ml-4">{CurrentNumber}</div>
-                            <button onClick={handlePlusButton}  className="bg-[#8e5436] dark:bg-slate-800  w-28 p-2 rounded-md text-white">+</button>
+                    <div className="flex justify-center">
+                        <div className="flex items-center">
+                            <button className="bg-gray-300 rounded-md p-3 m-2 text-black w-[100px]">-</button>
+                            <span className="text-white" >1</span>
+                            <button className="bg-gray-300 rounded-md p-3 m-2 text-black w-[100px]">+</button>
                         </div>
-                            <button onClick={openAside} className="bg-[#8e5436] dark:bg-slate-800 w-32 rounded-md text-white p-3">Comprar</button>
+                        <div>
+                            <button onClick={()=>openAside} className="bg-green-500 rounded-md p-3 m-2 text-white w-[200px]" >Comprar</button>
+                        </div>
                     </div>
                 </div>
+                
             </div>
-           
+            <div onClick={closeModal} className=" cursor-pointer fixed top-8 right-8 text-white text-5xl">
+                X
+            </div>
+
+            {showAside &&
+                <Aside/>
+            }
 
             
         </div>
