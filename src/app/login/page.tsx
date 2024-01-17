@@ -1,70 +1,66 @@
-'use client';
+'use client'
+import { useState } from "react";
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import axios from 'axios'
 
-import { FormEvent, useState } from "react";
-import {useRouter} from 'next/navigation';
-import Link from "next/link";
+const page = ()=>{
 
+    const route = useRouter();
 
+    const [email,setEmail] = useState('');
+    const [password,setpassword] = useState('');
 
+    const handlelogin = async()=>{
+        const response = await axios.post('http://localhost:4000/login',{
+            email,
+            password
+        });
 
+        console.log(response);
+        
+        if(!response.data.status){
+            alert('digite login corretamente');
+           
+        }else{
 
-
-
-const PageLogin = ()=>{
-
-
-   
-   
-const [email,setEmail] = useState<string>("");
-const [password,setPassword]= useState<string>('');
-
-const handleLogin= async ()=>{
-   
-  
-    
-}
+            route.push('/')
+        }
+        
+        
+    }
 
     return(
-        <div className="h-screen bg-gray-700 flex justify-center items-center rounded-sm">
-            <div className="max-w-2xl  rounded-md w-full p-5 m-auto bg-gray-100">
-                <h1 className="text-4xl font-bold text-center p-4">Login</h1>
-           
-                <div className="p-4">
-                    <label className="text-2xl">
-                        Email:
-                    </label> 
-                    <br />
-                    <input className="w-full p-3 border border-gray-500 outline-none rounded-md"
-                    type="email"
-                    placeholder="contato@gmail.com" 
+        <div className="bg-gray-400 mt-3 h-screen container m-auto flex flex-col justify-center items-center">
+            <h1 className="text-3xl font-bold">Login</h1>
+            <div>
+                <label className="text-3xl" >
+                    Email: <br />
+                    <input 
+                    className="w-96 rounded-md mb-5 outline-none" 
+                    type="text"
                     value={email}
-                    onChange={e=>setEmail(e.target.value)}
-                    />
+                    onChange={e=>setEmail(e.target.value)} />
+                </label>
+                <br />
+                <label className="text-3xl "   >
+                    Password: <br />
+                    <input 
+                    className="w-96 rounded-md outline-none" 
+                     type="text"
+                     value={password}
+                     onChange={e=>setpassword(e.target.value)} />
+                </label>
+                <div className="mb-6 underline text-white">
+                    <Link href={'/register'}>ainda não tem conta? cadastre-se</Link>
                 </div>
-                <div className="p-4">
-                    <label className="text-2xl">
-                        senha:
-                    </label>
-                    <br />
-                    <input className="w-full p-3 border border-gray-500 outline-none rounded-md"
-                     type="password"
-                    placeholder="123" 
-                    value={password}
-                    onChange={e=>setPassword(e.target.value)}
-                    />
-                </div>
-                <button onClick={handleLogin} className=" w-full p-3 rounded-md text-white   bg-blue-400 ">fazer login</button>
 
-                <div className="flex justify-end mt-10 ">
-                    <p className="p-3">Ainda Não tem conta?</p>
-                </div>
-      
-
-               
+                    
+                <button onClick={handlelogin} className="bg-green-500  text-white w-44 p-5 rounded-md m-auto">Entrar</button>
+                
             </div>
-
         </div>
     )
 }
 
-export default PageLogin;
+export default page;

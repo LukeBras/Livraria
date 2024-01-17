@@ -1,18 +1,31 @@
 'use client'
-import { Aside } from "@/components/Aside";
+
 import { Banner } from "@/components/Banner";
-import { BookArea } from "@/components/BookArea";
-import { useAside } from "@/hooks/useAside";
-import { LogIn } from "lucide-react";
+import { Header } from "@/components/Header";
+import { useBooks } from "@/utils/queries";
+
 
 
 const Page = ()=>{
+  const books = useBooks();
   return(
     <div>
       <Banner/>
-      <BookArea/>
+      {books.isLoading && 'carregando...'}
+
+      {books.data  &&
+      <div className="flex flex-col items-center">
+          {books.data?.map(item=>(
+            <div >
+              <img src={`${item.img}`} alt="" />
+              {item.title}
+              </div>
+          ))}
+      </div>
       
-      
+      }
+        
+        
     </div>
   )
 }
